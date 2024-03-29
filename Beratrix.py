@@ -1,3 +1,4 @@
+from typing import List
 #---------------------------------------------FUNCIONES PRINCIPALES DEL MENU---------------------------------------------
 #FUNCION UTILIZADA PARA OBTENER Y VERIFICAR EL NUMERO DE PROCESOS A EJECUTAR
 def obtener_numero_procesos ():
@@ -45,7 +46,7 @@ def creacion_nombre():
 def creacion_sin_nombre(numero):
     proceso=[None,0,0,0,0]
     #AQUI SE DECLARA Y SE Asigna un nombre
-    nombre = ("Proceso " + numero)
+    nombre = ("Proceso " + str(numero))
     #AQUI SE DECLARA Y SE PIDE TIEMPO DE LLEGADA
     tiempo_llegada_respuesta = input ("Por favor digite el tiempo de llegada del proceso:  ")
     #METODO VERIFICAR
@@ -82,15 +83,16 @@ def obtener_rafaga():
     return numero_rafaga
 #---------------------------------------------IMPLEMENTACION DEL MENU---------------------------------------------
 def menu ():
-    lista_procesos:[]
+    #SE IMPORTA LIBRERIA LIST PARA PODER QUE LISTA_PROCESOS SE VUELVA UNA LISTA DE LISTAS
+    lista_procesos: List[List] = []    
     #SALUDO DE PROYECTO BERATRIX
     print (" BIENVENIDO A BERATRIX "+"\n"+ " Aplicacion para la simulacion \n de sistemas de planificacion \n STRF ")
     #DECLARACION DE NUMERO DE REPETICIONES
     numero_repeticiones = obtener_numero_procesos()
     #SOLICITUD PARA SABER QUE METODO IMPLEMENTA RPARA CREAR PROCESO (CON O SIN NOMBRE)
-    respuesta = print (" ¿Desea crear los procesos con un nombre especifico o desa que se generen automaticamente? " +"\n"
-                + "DIGITE 1 PARA ASIGNAR NOMBRES"
-                + "DIIGITE 2 PARA ASIGNAR GENERAR DE FORMA AUTOMATICA")
+    respuesta = input (" ¿Desea crear los procesos con un nombre especifico o desa que se generen automaticamente? " +"\n"
+                + "\n DIGITE 1 PARA ASIGNAR NOMBRES"
+                + "\n DIIGITE 2 PARA ASIGNAR GENERAR DE FORMA AUTOMATICA \n")
     #METODO PARA VERIFICAR LA RESPUESTA DL USUARIO
     while (True):
         try:
@@ -102,12 +104,14 @@ def menu ():
             respuesta =  input ("RESPUESTA NO VALIDA"+"\n"+"Por favor digite  nuevamente el numero de rafagas a utilizar en el proceso"+"\n"+"MINIMO 1, MAXIMO 12"+ "\n")
     #CODICIONAL PARA IMPLEMENTAR EL METODO SEGUN LA RESPUESTA DEL USUARIO
     if (respuesta_usuario==1):
-        for i in range(0,numero_repeticiones,1):
+        for i in range(numero_repeticiones):
             obj_proceso = creacion_nombre ()
             lista_procesos.append(obj_proceso)
+        print (lista_procesos)
     else:
-        for i in range(0,numero_repeticiones,1):
-            obj_proceso = creacion_nombre (i)
+        for i in range(numero_repeticiones):
+            obj_proceso = creacion_sin_nombre (i+1)
             lista_procesos.append(obj_proceso)
+        print (lista_procesos)
 
 menu()
