@@ -107,11 +107,8 @@ def menu ():
         for i in range(numero_repeticiones):
             obj_proceso = creacion_nombre ()
             lista_procesos.append(obj_proceso)
-        print (lista_procesos)
     else:
         for i in range(numero_repeticiones):
             obj_proceso = creacion_sin_nombre (i+1)
             lista_procesos.append(obj_proceso)
-        print (lista_procesos)
 
-menu()
