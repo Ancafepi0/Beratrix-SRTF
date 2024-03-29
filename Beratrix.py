@@ -109,3 +109,5 @@ def menu ():
         for i in range(0,numero_repeticiones,1):
             obj_proceso = creacion_nombre (i)
             lista_procesos.append(obj_proceso)
+
+menu()
