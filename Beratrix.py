@@ -111,4 +111,32 @@ def menu ():
         for i in range(numero_repeticiones):
             obj_proceso = creacion_sin_nombre (i+1)
             lista_procesos.append(obj_proceso)
+    #RETORNO DE LA LISTA DE PROCESOS CREADA
+    return lista_procesos
+#---------------------------------------------IMPLEMENTACION DEL STRF---------------------------------------------
+#FUNCION QUE EJECUTA EL STRF 
+def strf ():
+    #LISTA CREADA USUARIO LLAMA A MENU PARA OBTENER LA LISA CREADA POR EL USUARIO
+    lista_creada_usuario = menu()
+    #LISTA ORDENADA ORDENA LA LISTA CREADA POR EL USUARIO DE MENOR A MAYOR UTILIZANDO PRIMERO EL PRIMER ARGUMENTO Y LUEGO EL SEGUNDO
+    lista_ordenada = sorted(lista_creada_usuario, key=lambda x: (x[1], x[2]))
+    strf_ciclo (lista_ordenada)
 
+#FUNCION QUE EJECUTA EL CICLO STRF
+def strf_ciclo(lista_ordenada): 
+    #CONTADOR ES UNA VARIABLES QUE INDICA CUANTOS CICLOS SE HAN EJECUTADO
+    contador=0
+    #LISTA QUE GUARDA LOS PROCESOS ENCONTRADOS
+    procesos_encontrados: List[List] = []   
+    #-----------------------------------------------PROCESOS DE BUSQUEDA-----------------------------------------------
+    #1
+    #CICLO QUE BUSCA PROCESOS QUE COINCIDA SU TIEMPO DE INICIO CON EL TIEMPO DEL CONTADOR
+    for proceso_coincidir in lista_ordenada:
+        if proceso_coincidir[1] == contador:
+            procesos_encontrados.append(proceso_coincidir)
+    if (len(procesos_encontrados)>1):
+        listas_ordenadas_rafagas = sorted(procesos_encontrados, key=lambda x:x[2])
+        candidato = listas_ordenadas_rafagas[0]
+            
+                
+strf ()
