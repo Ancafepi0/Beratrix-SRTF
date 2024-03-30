@@ -84,7 +84,7 @@ def obtener_rafaga():
 #---------------------------------------------IMPLEMENTACION DEL MENU---------------------------------------------
 def menu ():
     #SE IMPORTA LIBRERIA LIST PARA PODER QUE LISTA_PROCESOS SE VUELVA UNA LISTA DE LISTAS
-    lista_procesos: List[List] = []    
+    lista_procesos: List[List] = []  
     #SALUDO DE PROYECTO BERATRIX
     print (" BIENVENIDO A BERATRIX "+"\n"+ " Aplicacion para la simulacion \n de sistemas de planificacion \n STRF ")
     #DECLARACION DE NUMERO DE REPETICIONES
@@ -124,6 +124,8 @@ def strf ():
 
 #FUNCION QUE EJECUTA EL CICLO STRF
 def strf_ciclo(lista_ordenada): 
+    proceso_en_ejecucion = [["Usurus",0,3,0,0]] 
+    lista_espera: List[List] = []  
     #CONTADOR ES UNA VARIABLES QUE INDICA CUANTOS CICLOS SE HAN EJECUTADO
     contador=0
     #LISTA QUE GUARDA LOS PROCESOS ENCONTRADOS
@@ -134,9 +136,44 @@ def strf_ciclo(lista_ordenada):
     for proceso_coincidir in lista_ordenada:
         if proceso_coincidir[1] == contador:
             procesos_encontrados.append(proceso_coincidir)
+    #CONDICIONALES QUE DECIDEN QUE PROCESO ES CANDIDATO A EJECUTARSE
+    #SI HAY MAS DE UN PROCESOS QUE PUEDE SER CANDIDATO OSEA QUE LLEGA AL MISMO TIEMPO
     if (len(procesos_encontrados)>1):
         listas_ordenadas_rafagas = sorted(procesos_encontrados, key=lambda x:x[2])
         candidato = listas_ordenadas_rafagas[0]
-            
+    #UTILIZAMOS EL SLICING PARA QUE EL FOR EMPIECE DESPUES DEL PRIMERO PUES SERAN LOS PROCESOS QUE IRAN A LISTA DE ESPERA
+    # El slicing te permite seleccionar un rango específico de elementos en una lista. 
+        for enviar_a_espera in listas_ordenadas_rafagas[1:]:
+            lista_espera.append(enviar_a_espera)
+    #SI SOLO HAY UN PROCESO CANDIDATO
+    elif (len(procesos_encontrados)==1):
+        candidato= procesos_encontrados [0]
+    #SI NO HAY NINGUNO PROCESO CANDIDATO
+    else:
+        candidato= [[None,0,0,0,0]]
+    #2
+    #Ciclo que compara de rafaga necesitadas con el del procesos candidato
+    #ACCION SI HAY UN PROCESO CANDIDATO Y UN PROCESO EN EJECUCION
+    
+    if (candidato[0][0] != None and proceso_en_ejecucion[0][0] != None):
+        #AQUI SE COMPARA LA RAFAGA DE LOS DOS PROCESOS PARA SABER CUAL ES MENOR
+        valor_candidato= candidato[2]
+        valor_proceso_ejecucion = proceso_en_ejecucion [0][2]
+        #ACCION SI EL NUMERO DE RAFAGAS DEL PROCESO EN EJECUCION ES MENOR QUE EL DE CANDIDATO
+        if (valor_proceso_ejecucion < valor_candidato):
+            lista_espera.append(candidato)
+            candidato=proceso_en_ejecucion
+
+        #ACCION SI EL NUMERO DE RAFAGAS ES IGUAL EN LOS PROCESO
+        elif (valor_candidato==valor_proceso_ejecucion):
+            lista_espera.append(candidato)
+            candidato= proceso_en_ejecucion
+
+
+        #ACCION SI EL PROCESO CANDIDATO TIENE MENOR RAFAGAS QUE EL PROCESO EN EJECUCION
+        else:
+            lista_espera.append(proceso_en_ejecucion)
+            candidato = candidato
+    
                 
 strf ()
