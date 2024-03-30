@@ -120,8 +120,8 @@ def strf ():
     lista_creada_usuario = menu()
     #LISTA ORDENADA ORDENA LA LISTA CREADA POR EL USUARIO DE MENOR A MAYOR UTILIZANDO PRIMERO EL PRIMER ARGUMENTO Y LUEGO EL SEGUNDO
     lista_ordenada = sorted(lista_creada_usuario, key=lambda x: (x[1], x[2]))
-    strf_ciclo (lista_ordenada)
-
+    solucion_strf = strf_ciclo (lista_ordenada)
+    print (solucion_strf)
 #FUNCION QUE EJECUTA EL CICLO STRF
 def strf_ciclo(lista_ordenada): 
     proceso_en_ejecucion = [[None,0,0,0,0]] 
@@ -268,7 +268,14 @@ def strf_ciclo(lista_ordenada):
 #----------------------------------------------PROCESO DE VERIFICACION----------------------------------------------        
         if (candidato[0][0] != None):
             if (candidato [2] == 0):
+                candidato [4] = contador
                 lista_procesos_terminado.append(candidato)
-                print (lista_procesos_terminado)
-        break
+            else:
+                proceso_en_ejecucion = candidato
+        if (len(lista_procesos_terminado)== len(lista_ordenada)):
+            break
+#---------------------------------------------------PROCESO DE AUMENTO---------------------------------------------------        
+        for sub_proceso in lista_espera:
+            sub_proceso[3] += 1
+    return (lista_procesos_terminado)        
 strf ()
