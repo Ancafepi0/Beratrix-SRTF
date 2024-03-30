@@ -126,11 +126,8 @@ def strf ():
 def strf_ciclo(lista_ordenada): 
     proceso_en_ejecucion = [[None,0,0,0,0]] 
     lista_espera: List[List] = []
-      
     #LISTA CON PROCESOS EN ESPERA CANDIDATOS
     lista_candidatos_espera: List[List] = []  
-    un_proceso = ["Usurus",0,1,0,0]
-    lista_espera.append(un_proceso)
     #CONTADOR ES UNA VARIABLES QUE INDICA CUANTOS CICLOS SE HAN EJECUTADO
     contador=0
     #LISTA QUE GUARDA LOS PROCESOS ENCONTRADOS
@@ -189,13 +186,32 @@ def strf_ciclo(lista_ordenada):
     if (candidato[0][0] == None and proceso_en_ejecucion[0][0] == None):
         candidato = candidato
     #3 BUSQUEDA EN LA LISTA DE ESPERA BUSCANDO CANDIDATO CON MENOS RAFAGAS
-    #3.1 SI HAY UN PROCESO CANDIDATO
+    #3.1 SI HAY UN PROCESO CANDIDATO BUSCARA EN LA LISTA PROCESOS QUE TENGAN MENOR RAFAGAS QUE EL
     if (candidato[0][0] != None):
         valor_rafaga_candidato = candidato [2]
-        print ("FUNCIONE")
+        #BUSQUEDA EN LA LISTA DE ESPERA UN PROCESO CON MENOS RAFAGAS QUE EL CANDIDATO
         for proceso_espera in lista_espera:
             if (proceso_espera[2] < valor_rafaga_candidato):
                 lista_candidatos_espera.append(proceso_espera)
-                print ("CUMPLI")
-                print (lista_candidatos_espera) 
+        #SI EN LA LISTA CANDIDATOS DE ESPERA HAY MAS DE UNO SE TOMA EL QUE LLEGO PRIMERO
+        if (len(lista_candidatos_espera) > 1):
+            lista_ordena_candidatos_espera = sorted(lista_candidatos_espera, key=lambda x:(x[1], x[2]))
+            proceso_a_ejecutar = lista_ordena_candidatos_espera[0]
+            lista_espera.append(candidato)
+            candidato = proceso_a_ejecutar
+            for proceso_eliminar in lista_espera:
+                if proceso_eliminar[0] == proceso_a_ejecutar [0]:
+                    lista_espera.remove(proceso_a_ejecutar)
+                    break
+        #SI EN LA LISTA CANDIDATOS DE ESPERA SOLO HAY UNO ENTONCES ESE PROCESO SE TOMA COMO CANDIDATO
+        elif (len(lista_candidatos_espera)== 1):
+            proceso_a_ejecutar = lista_candidatos_espera
+            lista_espera.append(candidato)
+            candidato = proceso_a_ejecutar
+            lista_espera.remove(proceso_a_ejecutar[0])
+     
+        #SI EN LA LISTA CANDIDATOS DE ESPERA NO HAY NINGUN PROCESO CON MENOR RAFAGAS ENTONCES CANDIDATO SE MANTIENE IGUAL
+        else:
+            candidato = candidato
+            print ("LISTA DE CANDIDATOS IGUAL A CERO")
 strf ()
