@@ -98,10 +98,10 @@ def menu ():
         try:
             respuesta_usuario = int(respuesta)
             while (int(respuesta_usuario) < 1 or int(respuesta_usuario) > 2):
-                respuesta_usuario = input ("RESPUESTA INVALIDA"+"\n"+"Por favor digite nuevamente el numero de rafagas a utilizar"+"\n"+"MINIMO 1, MAXIMO 12"+ "\n")
+                respuesta_usuario = input ("RESPUESTA INVALIDA"+"\n"+"Por favor digite nuevamente su respuesta"+"\n"+"1 para crear procesos con nombre \n 2 para cerar sin nombre"+ "\n")
             break
         except ValueError:
-            respuesta =  input ("RESPUESTA NO VALIDA"+"\n"+"Por favor digite  nuevamente el numero de rafagas a utilizar en el proceso"+"\n"+"MINIMO 1, MAXIMO 12"+ "\n")
+            respuesta =  input ("RESPUESTA INVALIDA"+"\n"+"Por favor digite nuevamente su respuesta"+"\n"+"1 para crear procesos con nombre \n 2 para cerar sin nombre"+ "\n")
     #CODICIONAL PARA IMPLEMENTAR EL METODO SEGUN LA RESPUESTA DEL USUARIO
     if (respuesta_usuario==1):
         for i in range(numero_repeticiones):
@@ -126,6 +126,7 @@ def strf ():
 def strf_ciclo(lista_ordenada): 
     proceso_en_ejecucion = [[None,0,0,0,0]] 
     lista_espera: List[List] = []
+
     #LISTA CON PROCESOS EN ESPERA CANDIDATOS EN PROCESOS QUE SEAN DE MENOR RAFAGAS
     lista_candidatos_espera: List[List] = []
     #LISTA CON PROCESOS EN ESPERA CANDIDATOS EN PROCESOS CON IGUAL NUMERO DE RAFAGAS
@@ -133,95 +134,99 @@ def strf_ciclo(lista_ordenada):
     #CONTADOR ES UNA VARIABLES QUE INDICA CUANTOS CICLOS SE HAN EJECUTADO
     contador=0
     #LISTA QUE GUARDA LOS PROCESOS ENCONTRADOS
-    procesos_encontrados: List[List] = []   
+    procesos_encontrados: List[List] = []
+    #LISTA DE PROCESOS TERMINADOS
+    lista_procesos_terminado: List[List] = []
+    while (True):   
     #-----------------------------------------------PROCESOS DE BUSQUEDA-----------------------------------------------
-    #1
-    #CICLO QUE BUSCA PROCESOS QUE COINCIDA SU TIEMPO DE INICIO CON EL TIEMPO DEL CONTADOR
-    for proceso_coincidir in lista_ordenada:
-        if proceso_coincidir[1] == contador:
-            procesos_encontrados.append(proceso_coincidir)
-    #CONDICIONALES QUE DECIDEN QUE PROCESO ES CANDIDATO A EJECUTARSE
-    #1.1 SI HAY MAS DE UN PROCESOS QUE PUEDE SER CANDIDATO OSEA QUE LLEGA AL MISMO TIEMPO
-    if (len(procesos_encontrados)>1):
-        listas_ordenadas_rafagas = sorted(procesos_encontrados, key=lambda x:x[2])
-        candidato = listas_ordenadas_rafagas[0]
-    #UTILIZAMOS EL SLICING PARA QUE EL FOR EMPIECE DESPUES DEL PRIMERO PUES SERAN LOS PROCESOS QUE IRAN A LISTA DE ESPERA
-    # El slicing te permite seleccionar un rango específico de elementos en una lista. 
-        for enviar_a_espera in listas_ordenadas_rafagas[1:]:
-            lista_espera.append(enviar_a_espera)
-    #1.2 SI SOLO HAY UN PROCESO CANDIDATO
-    elif (len(procesos_encontrados)==1):
-        candidato= procesos_encontrados [0]
-    #1.3 SI NO HAY NINGUNO PROCESO CANDIDATO
-    else:
-        candidato= [[None,0,0,0,0]]
-    #2
-    #Ciclo que compara de rafaga necesitadas con el del procesos candidato
-    #2.1 ACCION SI HAY UN PROCESO CANDIDATO Y UN PROCESO EN EJECUCION
+        #1
+        #CICLO QUE BUSCA PROCESOS QUE COINCIDA SU TIEMPO DE INICIO CON EL TIEMPO DEL CONTADOR
+        for proceso_coincidir in lista_ordenada:
+            if proceso_coincidir[1] == contador:
+                procesos_encontrados.append(proceso_coincidir)
+        #CONDICIONALES QUE DECIDEN QUE PROCESO ES CANDIDATO A EJECUTARSE
+        #1.1 SI HAY MAS DE UN PROCESOS QUE PUEDE SER CANDIDATO OSEA QUE LLEGA AL MISMO TIEMPO
+        if (len(procesos_encontrados)>1):
+            listas_ordenadas_rafagas = sorted(procesos_encontrados, key=lambda x:x[2])
+            candidato = listas_ordenadas_rafagas[0]
+        #UTILIZAMOS EL SLICING PARA QUE EL FOR EMPIECE DESPUES DEL PRIMERO PUES SERAN LOS PROCESOS QUE IRAN A LISTA DE ESPERA
+        # El slicing te permite seleccionar un rango específico de elementos en una lista. 
+            for enviar_a_espera in listas_ordenadas_rafagas[1:]:
+                lista_espera.append(enviar_a_espera)
+        #1.2 SI SOLO HAY UN PROCESO CANDIDATO
+        elif (len(procesos_encontrados)==1):
+            candidato= procesos_encontrados [0]
+        #1.3 SI NO HAY NINGUNO PROCESO CANDIDATO
+        else:
+            candidato= [[None,0,0,0,0]]
+        #2
+        #Ciclo que compara de rafaga necesitadas con el del procesos candidato
+        #2.1 ACCION SI HAY UN PROCESO CANDIDATO Y UN PROCESO EN EJECUCION
     
-    if (candidato[0][0] != None and proceso_en_ejecucion[0][0] != None):
-        #AQUI SE COMPARA LA RAFAGA DE LOS DOS PROCESOS PARA SABER CUAL ES MENOR
-        valor_candidato= candidato[2]
-        valor_proceso_ejecucion = proceso_en_ejecucion [0][2]
-        #ACCION SI EL NUMERO DE RAFAGAS DEL PROCESO EN EJECUCION ES MENOR QUE EL DE CANDIDATO
-        if (valor_proceso_ejecucion < valor_candidato):
-            lista_espera.append(candidato)
-            candidato=proceso_en_ejecucion
+        if (candidato[0][0] != None and proceso_en_ejecucion[0][0] != None):
+            #AQUI SE COMPARA LA RAFAGA DE LOS DOS PROCESOS PARA SABER CUAL ES MENOR
+            valor_candidato= candidato[2]
+            valor_proceso_ejecucion = proceso_en_ejecucion [0][2]
+            #ACCION SI EL NUMERO DE RAFAGAS DEL PROCESO EN EJECUCION ES MENOR QUE EL DE CANDIDATO
+            if (valor_proceso_ejecucion < valor_candidato):
+                lista_espera.append(candidato)
+                candidato=proceso_en_ejecucion
 
-        #ACCION SI EL NUMERO DE RAFAGAS ES IGUAL EN LOS PROCESO
-        elif (valor_candidato==valor_proceso_ejecucion):
-            lista_espera.append(candidato)
-            candidato= proceso_en_ejecucion
+            #ACCION SI EL NUMERO DE RAFAGAS ES IGUAL EN LOS PROCESO
+            elif (valor_candidato==valor_proceso_ejecucion):
+                lista_espera.append(candidato)
+                candidato= proceso_en_ejecucion
 
 
-        #ACCION SI EL PROCESO CANDIDATO TIENE MENOR RAFAGAS QUE EL PROCESO EN EJECUCION
-        else:
-            lista_espera.append(proceso_en_ejecucion)
+            #ACCION SI EL PROCESO CANDIDATO TIENE MENOR RAFAGAS QUE EL PROCESO EN EJECUCION
+            else:
+                lista_espera.append(proceso_en_ejecucion)
+                candidato = candidato
+        #2.2 SI HAY PROCESO CANDIDATO Y NO HAY PROCESO EN EJECUCION
+        if (candidato[0][0] != None and proceso_en_ejecucion[0][0] == None):
             candidato = candidato
-    #2.2 SI HAY PROCESO CANDIDATO Y NO HAY PROCESO EN EJECUCION
-    if (candidato[0][0] != None and proceso_en_ejecucion[0][0] == None):
-        candidato = candidato
-    #2.3 SI NO HAY PROCESO CANDIDATO Y SI HAY PROCESO EN EJECUCION
-    if (candidato[0][0] == None and proceso_en_ejecucion[0][0] != None):
-        candidato = proceso_en_ejecucion
-    #2.4 SI NO HAY CANDIDADTO Y NO HAY PROCESO EN EJECUCION
-    if (candidato[0][0] == None and proceso_en_ejecucion[0][0] == None):
-        candidato = candidato
-    #3 BUSQUEDA EN LA LISTA DE ESPERA BUSCANDO CANDIDATO CON MENOS RAFAGAS
-    #3.1 SI HAY UN PROCESO CANDIDATO BUSCARA EN LA LISTA PROCESOS QUE TENGAN MENOR RAFAGAS QUE EL
-    if (candidato[0][0] != None):
-        valor_rafaga_candidato = candidato [2]
-        #BUSQUEDA EN LA LISTA DE ESPERA UN PROCESO CON MENOS RAFAGAS QUE EL CANDIDATO
-        for proceso_espera in lista_espera:
-            if (proceso_espera[2] < valor_rafaga_candidato):
-                lista_candidatos_espera.append(proceso_espera)
-        #SI EN LA LISTA CANDIDATOS DE ESPERA HAY MAS DE UNO SE TOMA EL QUE LLEGO PRIMERO
-        if (len(lista_candidatos_espera) > 1):
-            lista_ordena_candidatos_espera = sorted(lista_candidatos_espera, key=lambda x:(x[1], x[2]))
-            proceso_a_ejecutar = lista_ordena_candidatos_espera[0]
-            lista_espera.append(candidato)
-            candidato = proceso_a_ejecutar
-            for proceso_eliminar in lista_espera:
-                if proceso_eliminar[0] == proceso_a_ejecutar [0]:
-                    lista_espera.remove(proceso_a_ejecutar)
-                    break
-        #SI EN LA LISTA CANDIDATOS DE ESPERA SOLO HAY UNO ENTONCES ESE PROCESO SE TOMA COMO CANDIDATO
-        elif (len(lista_candidatos_espera)== 1):
-            proceso_a_ejecutar = lista_candidatos_espera
-            lista_espera.append(candidato)
-            candidato = proceso_a_ejecutar
-            lista_espera.remove(proceso_a_ejecutar[0])
+        #2.3 SI NO HAY PROCESO CANDIDATO Y SI HAY PROCESO EN EJECUCION
+        if (candidato[0][0] == None and proceso_en_ejecucion[0][0] != None):
+            candidato = proceso_en_ejecucion
+        #2.4 SI NO HAY CANDIDADTO Y NO HAY PROCESO EN EJECUCION
+        if (candidato[0][0] == None and proceso_en_ejecucion[0][0] == None):
+            candidato = candidato
+        #3 BUSQUEDA EN LA LISTA DE ESPERA BUSCANDO CANDIDATO CON MENOS RAFAGAS
+        #3.1 SI HAY UN PROCESO CANDIDATO BUSCARA EN LA LISTA PROCESOS QUE TENGAN MENOR RAFAGAS QUE EL
+        if (candidato[0][0] != None):
+            valor_rafaga_candidato = candidato [2]
+            #BUSQUEDA EN LA LISTA DE ESPERA UN PROCESO CON MENOS RAFAGAS QUE EL CANDIDATO
+            for proceso_espera in lista_espera:
+                if (proceso_espera[2] < valor_rafaga_candidato):
+                    lista_candidatos_espera.append(proceso_espera)
+            #SI EN LA LISTA CANDIDATOS DE ESPERA HAY MAS DE UNO SE TOMA EL QUE LLEGO PRIMERO
+            if (len(lista_candidatos_espera) > 1):
+                lista_ordena_candidatos_espera = sorted(lista_candidatos_espera, key=lambda x:(x[1], x[2]))
+                proceso_a_ejecutar = lista_ordena_candidatos_espera[0]
+                lista_espera.append(candidato)
+                candidato = proceso_a_ejecutar
+                for proceso_eliminar in lista_espera:
+                    if proceso_eliminar[0] == proceso_a_ejecutar [0]:
+                        lista_espera.remove(proceso_a_ejecutar)
+                        break
+            #SI EN LA LISTA CANDIDATOS DE ESPERA SOLO HAY UNO ENTONCES ESE PROCESO SE TOMA COMO CANDIDATO
+            elif (len(lista_candidatos_espera)== 1):
+                proceso_a_ejecutar = lista_candidatos_espera
+                lista_espera.append(candidato)
+                candidato = proceso_a_ejecutar
+                lista_espera.remove(proceso_a_ejecutar[0])
      
-        #SI EN LA LISTA CANDIDATOS DE ESPERA NO HAY NINGUN PROCESO CON MENOR RAFAGAS ENTONCES CANDIDATO SE MANTIENE IGUAL
-        else:
-            candidato = candidato
-    #3.2 SI HAY CANDIDATO SE BUSCA UN PROCESO CON IGUAL CANTIDAD DE RAFAGAS
+            #SI EN LA LISTA CANDIDATOS DE ESPERA NO HAY NINGUN PROCESO CON MENOR RAFAGAS ENTONCES CANDIDATO SE MANTIENE IGUAL
+            else:
+                candidato = candidato
+        #3.2 SI HAY CANDIDATO SE BUSCA UN PROCESO CON IGUAL CANTIDAD DE RAFAGAS
         if (candidato[0][0] !=  None):
             refagas_candidato= candidato[2]
+            #BUSQUEDA DE PROCESOS CANDIDADOS QUE NECESITEN RAFAGAS IGUALES AL DE CANDIDATO EN LA LISTA DE ESPERA
             for proceso_igual_espera in lista_espera:
                 if (proceso_igual_espera[2] == refagas_candidato):
                     lista_candidatos_igual.append(proceso_igual_espera)
-                print ("Funcione")
+            #CONDICIONAL SI LA LISTA DE CANDIDATOS DE IGUAL RAFAGAS ES MAYOR A UNA
             if (len(lista_candidatos_igual) > 1):
                 lista_ordena_candidatos_espera = sorted(lista_candidatos_igual, key=lambda x:(x[1], x[2]))
                 proceso_a_ejecutar = lista_ordena_candidatos_espera[0]
@@ -232,14 +237,38 @@ def strf_ciclo(lista_ordenada):
                         lista_espera.remove(proceso_a_ejecutar)
                         break
 
-            #SI EN LA LISTA CANDIDATOS DE ESPERA SOLO HAY UNO ENTONCES ESE PROCESO SE TOMA COMO CANDIDATO
+            #CONDICIONAL SI LA LISTA DE CANDIDATOS DE IGUAL RAFAGAS ES IGUAL A 1
             elif (len(lista_candidatos_igual)== 1):
                 proceso_a_ejecutar = lista_candidatos_igual
                 lista_espera.append(candidato)
                 candidato = proceso_a_ejecutar
                 lista_espera.remove(proceso_a_ejecutar[0])
 
-            #SI EN LA LISTA CANDIDATOS DE ESPERA NO HAY NINGUN PROCESO CON MENOR RAFAGAS ENTONCES CANDIDATO SE MANTIENE IGUAL
+            #SI EN LA LISTA CANDIDATOS DE ESPERA NO HAY NINGUN PROCESO CON IGUAL RAFAGAS ENTONCES CANDIDATO SE MANTIENE IGUAL
             else:
                 candidato = candidato
+        #3.3 SI NOHAY CANDIDATO SE REALIZA BUSCAQUEDA EN LA LISTA DE ESPERA PARA ENCONTRAR EL PROCESO CON MENOS RAFAGAS
+        if (candidato[0][0] == None):
+            lista_espera_ordenada = sorted(lista_espera, key=lambda x:(x[1], x[2]))
+            if (len(lista_espera_ordenada)> 0):
+                candidato = lista_espera_ordenada [0]
+                for proceso_eliminar in lista_espera:
+                    if proceso_eliminar[0] == candidato [0]:
+                        lista_espera.remove(candidato)
+                        break
+            #3.4 SI NO HAY PROCESO CANDIDATO Y LA LISTA DE ESPERA ESTA VACIA PASA SIN CANDIDATO
+            else:
+                candidato= candidato
+#-------------------------------------------------PROCESO DE EJECUCION-------------------------------------------------
+        #LE QUITA UNA RAFAGA AL CANDIDATO
+        if (candidato[0][0] != None):
+            candidato [2] -= 1
+        else:
+            candidato = candidato
+#----------------------------------------------PROCESO DE VERIFICACION----------------------------------------------        
+        if (candidato[0][0] != None):
+            if (candidato [2] == 0):
+                lista_procesos_terminado.append(candidato)
+                print (lista_procesos_terminado)
+        break
 strf ()
