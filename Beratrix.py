@@ -124,8 +124,13 @@ def strf ():
 
 #FUNCION QUE EJECUTA EL CICLO STRF
 def strf_ciclo(lista_ordenada): 
-    proceso_en_ejecucion = [["Usurus",0,3,0,0]] 
-    lista_espera: List[List] = []  
+    proceso_en_ejecucion = [[None,0,0,0,0]] 
+    lista_espera: List[List] = []
+      
+    #LISTA CON PROCESOS EN ESPERA CANDIDATOS
+    lista_candidatos_espera: List[List] = []  
+    un_proceso = ["Usurus",0,1,0,0]
+    lista_espera.append(un_proceso)
     #CONTADOR ES UNA VARIABLES QUE INDICA CUANTOS CICLOS SE HAN EJECUTADO
     contador=0
     #LISTA QUE GUARDA LOS PROCESOS ENCONTRADOS
@@ -137,7 +142,7 @@ def strf_ciclo(lista_ordenada):
         if proceso_coincidir[1] == contador:
             procesos_encontrados.append(proceso_coincidir)
     #CONDICIONALES QUE DECIDEN QUE PROCESO ES CANDIDATO A EJECUTARSE
-    #SI HAY MAS DE UN PROCESOS QUE PUEDE SER CANDIDATO OSEA QUE LLEGA AL MISMO TIEMPO
+    #1.1 SI HAY MAS DE UN PROCESOS QUE PUEDE SER CANDIDATO OSEA QUE LLEGA AL MISMO TIEMPO
     if (len(procesos_encontrados)>1):
         listas_ordenadas_rafagas = sorted(procesos_encontrados, key=lambda x:x[2])
         candidato = listas_ordenadas_rafagas[0]
@@ -145,15 +150,15 @@ def strf_ciclo(lista_ordenada):
     # El slicing te permite seleccionar un rango específico de elementos en una lista. 
         for enviar_a_espera in listas_ordenadas_rafagas[1:]:
             lista_espera.append(enviar_a_espera)
-    #SI SOLO HAY UN PROCESO CANDIDATO
+    #1.2 SI SOLO HAY UN PROCESO CANDIDATO
     elif (len(procesos_encontrados)==1):
         candidato= procesos_encontrados [0]
-    #SI NO HAY NINGUNO PROCESO CANDIDATO
+    #1.3 SI NO HAY NINGUNO PROCESO CANDIDATO
     else:
         candidato= [[None,0,0,0,0]]
     #2
     #Ciclo que compara de rafaga necesitadas con el del procesos candidato
-    #ACCION SI HAY UN PROCESO CANDIDATO Y UN PROCESO EN EJECUCION
+    #2.1 ACCION SI HAY UN PROCESO CANDIDATO Y UN PROCESO EN EJECUCION
     
     if (candidato[0][0] != None and proceso_en_ejecucion[0][0] != None):
         #AQUI SE COMPARA LA RAFAGA DE LOS DOS PROCESOS PARA SABER CUAL ES MENOR
@@ -174,6 +179,23 @@ def strf_ciclo(lista_ordenada):
         else:
             lista_espera.append(proceso_en_ejecucion)
             candidato = candidato
-    
-                
+    #2.2 SI HAY PROCESO CANDIDATO Y NO HAY PROCESO EN EJECUCION
+    if (candidato[0][0] != None and proceso_en_ejecucion[0][0] == None):
+        candidato = candidato
+    #2.3 SI NO HAY PROCESO CANDIDATO Y SI HAY PROCESO EN EJECUCION
+    if (candidato[0][0] == None and proceso_en_ejecucion[0][0] != None):
+        candidato = proceso_en_ejecucion
+    #2.4 SI NO HAY CANDIDADTO Y NO HAY PROCESO EN EJECUCION
+    if (candidato[0][0] == None and proceso_en_ejecucion[0][0] == None):
+        candidato = candidato
+    #3 BUSQUEDA EN LA LISTA DE ESPERA BUSCANDO CANDIDATO CON MENOS RAFAGAS
+    #3.1 SI HAY UN PROCESO CANDIDATO
+    if (candidato[0][0] != None):
+        valor_rafaga_candidato = candidato [2]
+        print ("FUNCIONE")
+        for proceso_espera in lista_espera:
+            if (proceso_espera[2] < valor_rafaga_candidato):
+                lista_candidatos_espera.append(proceso_espera)
+                print ("CUMPLI")
+                print (lista_candidatos_espera) 
 strf ()
