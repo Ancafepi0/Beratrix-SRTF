@@ -125,18 +125,18 @@ def strf ():
 #FUNCION QUE EJECUTA EL CICLO STRF
 def strf_ciclo(lista_ordenada): 
     proceso_en_ejecucion = [[None,0,0,0,0]] 
-    lista_espera: List[List] = []
+    lista_espera: List[List] = [] #PERMANENTE
 
     #LISTA CON PROCESOS EN ESPERA CANDIDATOS EN PROCESOS QUE SEAN DE MENOR RAFAGAS
-    lista_candidatos_espera: List[List] = []
+    lista_candidatos_espera: List[List] = [] #TEMPORAL
     #LISTA CON PROCESOS EN ESPERA CANDIDATOS EN PROCESOS CON IGUAL NUMERO DE RAFAGAS
-    lista_candidatos_igual: List [List] = []
+    lista_candidatos_igual: List [List] = [] #TEMPORAL
     #CONTADOR ES UNA VARIABLES QUE INDICA CUANTOS CICLOS SE HAN EJECUTADO
-    contador=0
+    contador=0 #PERMANENTE
     #LISTA QUE GUARDA LOS PROCESOS ENCONTRADOS
-    procesos_encontrados: List[List] = []
+    procesos_encontrados: List[List] = [] #TEMPORAL
     #LISTA DE PROCESOS TERMINADOS
-    lista_procesos_terminado: List[List] = []
+    lista_procesos_terminado: List[List] = [] #PERMANENTE
     while (True):   
     #-----------------------------------------------PROCESOS DE BUSQUEDA-----------------------------------------------
         #1
@@ -270,12 +270,20 @@ def strf_ciclo(lista_ordenada):
             if (candidato [2] == 0):
                 candidato [4] = contador
                 lista_procesos_terminado.append(candidato)
+
+
             else:
                 proceso_en_ejecucion = candidato
+ 
         if (len(lista_procesos_terminado)== len(lista_ordenada)):
             break
 #---------------------------------------------------PROCESO DE AUMENTO---------------------------------------------------        
         for sub_proceso in lista_espera:
             sub_proceso[3] += 1
+#-------------------------------------------------CAMBIO DE VARIABLES--------------------------------------------------        
+        contador +=1
+        procesos_encontrados.clear() 
+        lista_candidatos_igual.clear()
+        lista_candidatos_espera.clear ()
     return (lista_procesos_terminado)        
 strf ()
