@@ -121,7 +121,10 @@ def strf ():
     #LISTA ORDENADA ORDENA LA LISTA CREADA POR EL USUARIO DE MENOR A MAYOR UTILIZANDO PRIMERO EL PRIMER ARGUMENTO Y LUEGO EL SEGUNDO
     lista_ordenada = sorted(lista_creada_usuario, key=lambda x: (x[1], x[2]))
     solucion_strf = strf_ciclo (lista_ordenada)
-    print (solucion_strf)
+    for proceso_imprimir in solucion_strf:
+        print (proceso_imprimir)
+    print ("PROCESO TERMINADO CON EXITO")
+    print ("GRACIAS POR EJECUTAR BERATRIX ")
 #FUNCION QUE EJECUTA EL CICLO STRF
 def strf_ciclo(lista_ordenada): 
     proceso_en_ejecucion = [None,0,0,0,0]
@@ -159,13 +162,13 @@ def strf_ciclo(lista_ordenada):
             candidato= procesos_encontrados [0]
         #1.3 SI NO HAY NINGUNO PROCESO CANDIDATO
         else:
-            candidato= [[None,0,0,0,0]]
+            candidato= [None,0,0,0,0]
         #2
         #Ciclo que compara de rafaga necesitadas con el del procesos candidato
         #2.1 ACCION SI HAY UN PROCESO CANDIDATO Y UN PROCESO EN EJECUCION
         try:
             try:
-                nombre_proceso_ejecucion= proceso_en_ejecucion[0][0]
+                nombre_proceso_ejecucion= proceso_en_ejecucion[0]
             except TypeError:
                 nombre_proceso_ejecucion = None
         except IndexError:
@@ -174,17 +177,30 @@ def strf_ciclo(lista_ordenada):
             except:
                 proceso_en_ejecucion= [None,0,0,0,0,]
                 nombre_proceso_ejecucion= proceso_en_ejecucion [0]
-        if (candidato[0][0] != None and nombre_proceso_ejecucion != None):
+        try:
+            nombre_candidato_ciclo_2 = candidato [0]
+        except:
+            nombre_candidato_ciclo_lista_listas = candidato
+            lista_unica = [elemento for sublist in nombre_candidato_ciclo_lista_listas for elemento in sublist]
+            candidato = lista_unica
+            nombre_candidato_ciclo_2 = candidato [0]
+        if (nombre_candidato_ciclo_2 != None and nombre_proceso_ejecucion != None):
             #AQUI SE COMPARA LA RAFAGA DE LOS DOS PROCESOS PARA SABER CUAL ES MENOR
             
             try:
                 valor_candidato= int(candidato[2])
             except ValueError:
-                valor_candidato= int(candidato[0][2])
+                valor_candidato_ciclo_lista_listas = candidato
+                lista_unica = [elemento for sublist in valor_candidato_ciclo_lista_listas for elemento in sublist]
+                candidato = lista_unica
+                valor_candidato= int(candidato[2])
             try:
-                valor_proceso_ejecucion = int (proceso_en_ejecucion [0][2])
+                valor_proceso_ejecucion = int (proceso_en_ejecucion [2])
 
             except ValueError:
+                valor_proceso_ejecucion_ciclo_lista_listas = candidato
+                lista_unica = [elemento for sublist in valor_proceso_ejecucion_ciclo_lista_listas for elemento in sublist]
+                candidato = lista_unica
                 valor_proceso_ejecucion= int(candidato[2])
 
             
@@ -205,20 +221,30 @@ def strf_ciclo(lista_ordenada):
                 candidato = candidato
         #2.2 SI HAY PROCESO CANDIDATO Y NO HAY PROCESO EN EJECUCION
         try:
-            nombre_proceso_ejecucion= proceso_en_ejecucion [0][0]
-        except TypeError:
             nombre_proceso_ejecucion= proceso_en_ejecucion [0]
-        if (candidato[0][0] != None and nombre_proceso_ejecucion == None):
+        except TypeError:
+            nombre_proceso_ejecucion_lista_listas = proceso_en_ejecucion
+            lista_unica = [elemento for sublist in nombre_proceso_ejecucion_lista_listas for elemento in sublist]
+            proceso_en_ejecucion = lista_unica
+            nombre_proceso_ejecucion= proceso_en_ejecucion [0]
+        try:
+            nombre_candidato_multiif= candidato [0]
+        except:
+            nombre_candidato_multiif_lista_listas = candidato
+            lista_unica = [elemento for sublist in nombre_candidato_multiif_lista_listas for elemento in sublist]
+            candidato = lista_unica
+            nombre_candidato_multiif= candidato [0]
+        if (nombre_candidato_multiif != None and nombre_proceso_ejecucion == None):
             candidato = candidato
         #2.3 SI NO HAY PROCESO CANDIDATO Y SI HAY PROCESO EN EJECUCION
-        if (candidato[0][0] == None and nombre_proceso_ejecucion != None):
+        if (nombre_candidato_multiif == None and nombre_proceso_ejecucion != None):
             candidato = proceso_en_ejecucion
         #2.4 SI NO HAY CANDIDADTO Y NO HAY PROCESO EN EJECUCION
-        if (candidato[0][0] == None and nombre_proceso_ejecucion == None):
+        if (nombre_candidato_multiif == None and nombre_proceso_ejecucion == None):
             candidato = candidato
         #3 BUSQUEDA EN LA LISTA DE ESPERA BUSCANDO CANDIDATO CON MENOS RAFAGAS
         #3.1 SI HAY UN PROCESO CANDIDATO BUSCARA EN LA LISTA PROCESOS QUE TENGAN MENOR RAFAGAS QUE EL
-        if (candidato[0][0] != None):
+        if (nombre_candidato_multiif != None):
             try:
                 valor_rafaga_candidato = candidato [2]
             except IndexError:
@@ -231,9 +257,15 @@ def strf_ciclo(lista_ordenada):
                 try:
                     nuemero_espera= int(proceso_espera[2])
                 except ValueError:
-                    nuemero_espera= int(proceso_espera[0][2])
+                    nuemero_espera_lista_listas = proceso_espera
+                    lista_unica = [elemento for sublist in nuemero_espera_lista_listas for elemento in sublist]
+                    proceso_espera = lista_unica
+                    nuemero_espera= int(proceso_espera[2])
                 except IndexError:
-                    nuemero_espera= int(proceso_espera[0][2])
+                    nuemero_espera_lista_listas = proceso_espera
+                    lista_unica = [elemento for sublist in nuemero_espera_lista_listas for elemento in sublist]
+                    proceso_espera = lista_unica
+                    nuemero_espera= int(proceso_espera[2])
                 if (nuemero_espera < valor_rafaga_candidato):
                     lista_candidatos_espera.append(proceso_espera)
             #SI EN LA LISTA CANDIDATOS DE ESPERA HAY MAS DE UNO SE TOMA EL QUE LLEGO PRIMERO
@@ -257,7 +289,14 @@ def strf_ciclo(lista_ordenada):
             else:
                 candidato = candidato
         #3.2 SI HAY CANDIDATO SE BUSCA UN PROCESO CON IGUAL CANTIDAD DE RAFAGAS
-        if (candidato[0][0] !=  None):
+        try:
+            nombre_candidato_3= candidato [0]
+        except:
+            nombre_candidato_3_lista_listas = candidato
+            lista_unica = [elemento for sublist in nombre_candidato_3_lista_listas for elemento in sublist]
+            candidato = lista_unica
+            nombre_candidato_3= candidato [0]        
+        if (nombre_candidato_3 !=  None):
             try:
                 try:
                     refagas_candidato= int(candidato[2])
@@ -276,7 +315,10 @@ def strf_ciclo(lista_ordenada):
                 try:
                     numero_proceso_igual= proceso_igual_espera[2]
                 except IndexError:
-                    numero_proceso_igual= proceso_igual_espera[0][2]
+                    numero_proceso_igual_lista_listas = proceso_igual_espera
+                    lista_unica = [elemento for sublist in numero_proceso_igual_lista_listas for elemento in sublist]
+                    proceso_igual_espera = lista_unica
+                    numero_proceso_igual= proceso_igual_espera[2]
                 if (numero_proceso_igual == refagas_candidato):
                     lista_candidatos_igual.append(proceso_igual_espera)
             #CONDICIONAL SI LA LISTA DE CANDIDATOS DE IGUAL RAFAGAS ES MAYOR A UNA
@@ -301,7 +343,14 @@ def strf_ciclo(lista_ordenada):
             else:
                 candidato = candidato
         #3.3 SI NOHAY CANDIDATO SE REALIZA BUSCAQUEDA EN LA LISTA DE ESPERA PARA ENCONTRAR EL PROCESO CON MENOS RAFAGAS
-        if (candidato[0][0] == None):
+        try:
+            nombre_candidato_3_3= candidato [0]
+        except:
+            nombre_candidato_3_3_lista_listas = candidato
+            lista_unica = [elemento for sublist in nombre_candidato_3_3_lista_listas for elemento in sublist]
+            candidato = lista_unica
+            nombre_candidato_3_3= candidato [0]
+        if (nombre_candidato_3_3 == None):
             lista_espera_ordenada = sorted(lista_espera, key=lambda x:(x[1], x[2]))
             if (len(lista_espera_ordenada)> 0):
                 candidato = lista_espera_ordenada [0]
