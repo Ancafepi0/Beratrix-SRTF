@@ -138,6 +138,7 @@ def strf_ciclo(lista_ordenada):
     #LISTA DE PROCESOS TERMINADOS
     lista_procesos_terminado: List[List] = [] #PERMANENTE
     while (True):   
+        procesos_encontrados.clear()
     #-----------------------------------------------PROCESOS DE BUSQUEDA-----------------------------------------------
         #1
         #CICLO QUE BUSCA PROCESOS QUE COINCIDA SU TIEMPO DE INICIO CON EL TIEMPO DEL CONTADOR
@@ -162,11 +163,31 @@ def strf_ciclo(lista_ordenada):
         #2
         #Ciclo que compara de rafaga necesitadas con el del procesos candidato
         #2.1 ACCION SI HAY UN PROCESO CANDIDATO Y UN PROCESO EN EJECUCION
-    
-        if (candidato[0][0] != None and proceso_en_ejecucion[0][0] != None):
+        try:
+            try:
+                nombre_proceso_ejecucion= proceso_en_ejecucion[0][0]
+            except TypeError:
+                nombre_proceso_ejecucion = None
+        except IndexError:
+            try :
+                nombre_proceso_ejecucion= proceso_en_ejecucion[0]
+            except:
+                proceso_en_ejecucion= [None,0,0,0,0,]
+                nombre_proceso_ejecucion= proceso_en_ejecucion [0]
+        if (candidato[0][0] != None and nombre_proceso_ejecucion != None):
             #AQUI SE COMPARA LA RAFAGA DE LOS DOS PROCESOS PARA SABER CUAL ES MENOR
-            valor_candidato= candidato[2]
-            valor_proceso_ejecucion = proceso_en_ejecucion [0][2]
+            
+            try:
+                valor_candidato= int(candidato[2])
+            except ValueError:
+                valor_candidato= int(candidato[0][2])
+            try:
+                valor_proceso_ejecucion = int (proceso_en_ejecucion [0][2])
+
+            except ValueError:
+                valor_proceso_ejecucion= int(candidato[2])
+
+            
             #ACCION SI EL NUMERO DE RAFAGAS DEL PROCESO EN EJECUCION ES MENOR QUE EL DE CANDIDATO
             if (valor_proceso_ejecucion < valor_candidato):
                 lista_espera.append(candidato)
@@ -183,18 +204,25 @@ def strf_ciclo(lista_ordenada):
                 lista_espera.append(proceso_en_ejecucion)
                 candidato = candidato
         #2.2 SI HAY PROCESO CANDIDATO Y NO HAY PROCESO EN EJECUCION
-        if (candidato[0][0] != None and proceso_en_ejecucion[0][0] == None):
+        try:
+            nombre_proceso_ejecucion= proceso_en_ejecucion [0][0]
+        except TypeError:
+            nombre_proceso_ejecucion= proceso_en_ejecucion [0]
+        if (candidato[0][0] != None and nombre_proceso_ejecucion == None):
             candidato = candidato
         #2.3 SI NO HAY PROCESO CANDIDATO Y SI HAY PROCESO EN EJECUCION
-        if (candidato[0][0] == None and proceso_en_ejecucion[0][0] != None):
+        if (candidato[0][0] == None and nombre_proceso_ejecucion != None):
             candidato = proceso_en_ejecucion
         #2.4 SI NO HAY CANDIDADTO Y NO HAY PROCESO EN EJECUCION
-        if (candidato[0][0] == None and proceso_en_ejecucion[0][0] == None):
+        if (candidato[0][0] == None and nombre_proceso_ejecucion == None):
             candidato = candidato
         #3 BUSQUEDA EN LA LISTA DE ESPERA BUSCANDO CANDIDATO CON MENOS RAFAGAS
         #3.1 SI HAY UN PROCESO CANDIDATO BUSCARA EN LA LISTA PROCESOS QUE TENGAN MENOR RAFAGAS QUE EL
         if (candidato[0][0] != None):
-            valor_rafaga_candidato = candidato [2]
+            try:
+                valor_rafaga_candidato = candidato [2]
+            except TypeError:
+                valor_rafaga_candidato = candidato [0][2]
             #BUSQUEDA EN LA LISTA DE ESPERA UN PROCESO CON MENOS RAFAGAS QUE EL CANDIDATO
             for proceso_espera in lista_espera:
                 if (proceso_espera[2] < valor_rafaga_candidato):
@@ -221,7 +249,13 @@ def strf_ciclo(lista_ordenada):
                 candidato = candidato
         #3.2 SI HAY CANDIDATO SE BUSCA UN PROCESO CON IGUAL CANTIDAD DE RAFAGAS
         if (candidato[0][0] !=  None):
-            refagas_candidato= candidato[2]
+            try:
+                try:
+                    refagas_candidato= int(candidato[2])
+                except: 
+                    refagas_candidato= int(candidato[0][2])
+            except ValueError:
+                refagas_candidato= int(candidato[0][2])
             #BUSQUEDA DE PROCESOS CANDIDADOS QUE NECESITEN RAFAGAS IGUALES AL DE CANDIDATO EN LA LISTA DE ESPERA
             for proceso_igual_espera in lista_espera:
                 if (proceso_igual_espera[2] == refagas_candidato):
@@ -262,26 +296,53 @@ def strf_ciclo(lista_ordenada):
 #-------------------------------------------------PROCESO DE EJECUCION-------------------------------------------------
         #LE QUITA UNA RAFAGA AL CANDIDATO
         if (candidato[0][0] != None):
-            candidato [2] -= 1
+            try:
+                candidato [2] -= 1
+                #input("HOLA SOY EL QUE PARA EL PROCESO EN TRY")
+            except IndexError:
+                candidato [0][2] -= 1
+                #input("HOLA SOY EL QUE PARA EL PROCESO EN EXCEPT")
         else:
+            #input("HOLA SOY EL QUE PARA EL PROCESO EN ELSE")
             candidato = candidato
 #----------------------------------------------PROCESO DE VERIFICACION----------------------------------------------        
-        if (candidato[0][0] != None):
-            if (candidato [2] == 0):
-                candidato [4] = contador
+        if (candidato[0][0] != None):            
+            try:
+                try:
+                    numero_rafagas =int (candidato [2])
+                except IndexError:
+                    numero_rafagas =int (candidato [0][2] )
+            except ValueError:
+                numero_rafagas =int (candidato [0][2] )
+            if (numero_rafagas== 0):
+                try:
+                    candidato [4] = contador
+                except:
+                    candidato [0][4] = contador
                 lista_procesos_terminado.append(candidato)
-
-
+                #print (contador)
+                #print (candidato)
             else:
                 proceso_en_ejecucion = candidato
- 
+                #print (contador)
+                #print (candidato)
+
+        input ("HOLI SOY EL SEPARADOR ")
+        print (lista_procesos_terminado)
         if (len(lista_procesos_terminado)== len(lista_ordenada)):
             break
 #---------------------------------------------------PROCESO DE AUMENTO---------------------------------------------------        
         for sub_proceso in lista_espera:
             sub_proceso[3] += 1
 #-------------------------------------------------CAMBIO DE VARIABLES--------------------------------------------------        
+        try:
+            numero_rafagas_ejecucion=proceso_en_ejecucion[2]
+        except:
+            numero_rafagas_ejecucion=proceso_en_ejecucion[0][2]
+        if (numero_rafagas_ejecucion== 0):
+            proceso_en_ejecucion= [[None,0,0,0,0]]
         contador +=1
+        candidato= [[None,0,0,0,0]]
         procesos_encontrados.clear() 
         lista_candidatos_igual.clear()
         lista_candidatos_espera.clear ()
