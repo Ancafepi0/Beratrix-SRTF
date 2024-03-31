@@ -222,7 +222,10 @@ def strf_ciclo(lista_ordenada):
             try:
                 valor_rafaga_candidato = candidato [2]
             except IndexError:
-                valor_rafaga_candidato = candidato [0][2]
+                valor_rafaga_lista_listas = candidato
+                lista_unica = [elemento for sublist in valor_rafaga_lista_listas for elemento in sublist]
+                candidato = lista_unica
+                valor_rafaga_candidato = candidato [2]
             #BUSQUEDA EN LA LISTA DE ESPERA UN PROCESO CON MENOS RAFAGAS QUE EL CANDIDATO
             for proceso_espera in lista_espera:
                 try:
@@ -259,9 +262,15 @@ def strf_ciclo(lista_ordenada):
                 try:
                     refagas_candidato= int(candidato[2])
                 except IndexError: 
-                    refagas_candidato= int(candidato[0][2])
+                    rafagas_numero_lista_listas = candidato
+                    lista_unica = [elemento for sublist in rafagas_numero_lista_listas for elemento in sublist]
+                    candidato = lista_unica
+                    refagas_candidato= int(candidato[2])
             except ValueError:
-                refagas_candidato= int(candidato[0][2])
+                rafagas_numero_lista_listas = candidato
+                lista_unica = [elemento for sublist in rafagas_numero_lista_listas for elemento in sublist]
+                candidato = lista_unica
+                refagas_candidato= int(candidato[2])
             #BUSQUEDA DE PROCESOS CANDIDADOS QUE NECESITEN RAFAGAS IGUALES AL DE CANDIDATO EN LA LISTA DE ESPERA
             for proceso_igual_espera in lista_espera:
                 try:
@@ -305,7 +314,14 @@ def strf_ciclo(lista_ordenada):
                 candidato= candidato
 #-------------------------------------------------PROCESO DE EJECUCION-------------------------------------------------
         #LE QUITA UNA RAFAGA AL CANDIDATO
-        if (candidato[0][0] != None):
+        try:
+            nombre_candidato_ejecucion= candidato[0]
+        except:
+            nombre_candidato_lista_listas = candidato
+            lista_unica = [elemento for sublist in nombre_candidato_lista_listas for elemento in sublist]
+            candidato = lista_unica
+            nombre_candidato_ejecucion= candidato[0]
+        if (nombre_candidato_ejecucion != None):
             try:
                 candidato [2] -= 1
             except IndexError:
@@ -315,27 +331,43 @@ def strf_ciclo(lista_ordenada):
                 candidato [2] -= 1
         else:
             candidato = candidato
-        print (candidato)
-        print (contador)
+
 #----------------------------------------------PROCESO DE VERIFICACION----------------------------------------------        
-        if (candidato[0][0] != None):            
+        try:
+            nombre_candidato_verificacion= candidato[0]
+        except:
+            nombre_candidato_lista_listas = candidato
+            lista_unica = [elemento for sublist in nombre_candidato_lista_listas for elemento in sublist]
+            candidato = lista_unica
+            nombre_candidato_verificacion= candidato[0]
+
+        if (nombre_candidato_verificacion != None):            
             try:
                 try:
                     numero_rafagas =int (candidato [2])
                 except IndexError:
-                    numero_rafagas =int (candidato [0][2] )
+                    numero_rafagas_lista_lista = candidato
+                    lista_unica = [elemento for sublist in numero_rafagas_lista_lista for elemento in sublist]
+                    candidato = lista_unica
+                    numero_rafagas =int (candidato [2])
+                    
             except ValueError:
-                numero_rafagas =int (candidato [0][2] )
+                numero_rafagas_lista_lista = candidato
+                lista_unica = [elemento for sublist in numero_rafagas_lista_lista for elemento in sublist]
+                candidato = lista_unica
+                numero_rafagas =int (candidato [2])
             if (numero_rafagas== 0):
                 try:
                     candidato [4] = contador
                     lista_procesos_terminado.append(candidato)
                 except IndexError:
-                    candidato [0][4] = contador
+                    agregar_lista_lista = candidato
+                    lista_unica = [elemento for sublist in agregar_lista_lista for elemento in sublist]
+                    candidato = lista_unica
+                    candidato [4] = contador
                     lista_procesos_terminado.append(candidato)
             else:
                 proceso_en_ejecucion = candidato
-        input ("HOLA SOY EL SEPARADOR")
 
         if (len(lista_procesos_terminado)== len(lista_ordenada)):
 
@@ -345,7 +377,10 @@ def strf_ciclo(lista_ordenada):
             try:
                 sub_proceso[3] += 1
             except IndexError:
-                sub_proceso[0][3] += 1
+                sub_proceso_lista_lista = sub_proceso
+                lista_unica = [elemento for sublist in sub_proceso_lista_lista for elemento in sublist]
+                sub_proceso = lista_unica
+                sub_proceso[3] += 1
 #-------------------------------------------------CAMBIO DE VARIABLES--------------------------------------------------        
         try:
             numero_rafagas_ejecucion=proceso_en_ejecucion[2]
@@ -354,6 +389,7 @@ def strf_ciclo(lista_ordenada):
             lista_unica = [elemento for sublist in proceso_ejecucion_lista_lista for elemento in sublist]
             proceso_en_ejecucion = lista_unica
             numero_rafagas_ejecucion=proceso_en_ejecucion[2]
+
         if (numero_rafagas_ejecucion== 0):
             proceso_en_ejecucion= [None,0,0,0,0]
         contador +=1
