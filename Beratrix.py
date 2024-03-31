@@ -252,7 +252,7 @@ def strf_ciclo(lista_ordenada):
             try:
                 try:
                     refagas_candidato= int(candidato[2])
-                except: 
+                except IndexError: 
                     refagas_candidato= int(candidato[0][2])
             except ValueError:
                 refagas_candidato= int(candidato[0][2])
@@ -298,12 +298,9 @@ def strf_ciclo(lista_ordenada):
         if (candidato[0][0] != None):
             try:
                 candidato [2] -= 1
-                #input("HOLA SOY EL QUE PARA EL PROCESO EN TRY")
             except IndexError:
                 candidato [0][2] -= 1
-                #input("HOLA SOY EL QUE PARA EL PROCESO EN EXCEPT")
         else:
-            #input("HOLA SOY EL QUE PARA EL PROCESO EN ELSE")
             candidato = candidato
 #----------------------------------------------PROCESO DE VERIFICACION----------------------------------------------        
         if (candidato[0][0] != None):            
@@ -317,18 +314,14 @@ def strf_ciclo(lista_ordenada):
             if (numero_rafagas== 0):
                 try:
                     candidato [4] = contador
-                except:
+
+                except IndexError:
                     candidato [0][4] = contador
-                lista_procesos_terminado.append(candidato)
-                #print (contador)
-                #print (candidato)
+                    lista_procesos_terminado.append(candidato)
             else:
                 proceso_en_ejecucion = candidato
-                #print (contador)
-                #print (candidato)
 
-        input ("HOLI SOY EL SEPARADOR ")
-        print (lista_procesos_terminado)
+
         if (len(lista_procesos_terminado)== len(lista_ordenada)):
             break
 #---------------------------------------------------PROCESO DE AUMENTO---------------------------------------------------        
@@ -337,7 +330,7 @@ def strf_ciclo(lista_ordenada):
 #-------------------------------------------------CAMBIO DE VARIABLES--------------------------------------------------        
         try:
             numero_rafagas_ejecucion=proceso_en_ejecucion[2]
-        except:
+        except IndexError:
             numero_rafagas_ejecucion=proceso_en_ejecucion[0][2]
         if (numero_rafagas_ejecucion== 0):
             proceso_en_ejecucion= [[None,0,0,0,0]]
